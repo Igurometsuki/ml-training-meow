@@ -1,0 +1,47 @@
+# Import libraries
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+
+# Create sample data
+data = {'Hours Studied': [0, 1, 2, 3, 4, 5], 'Pass/Fail': [0, 0, 1, 0, 1, 1]}
+df = pd.DataFrame(data)
+
+# Separate features (X) and target variable (y)
+X = df[['Hours Studied']]
+y = df['Pass/Fail']
+
+# Create and train the logistic regression model
+model = LogisticRegression()
+model.fit(X, y)
+
+# Function to get user input and make prediction
+def predict_pass_chance():
+  """
+  This function gets user input for study hours, makes a prediction using the trained model,
+  and returns the predicted chance of passing as a percentage.
+  """
+  while True:
+    try:
+      # Get user input for hours studied (handle potential errors)
+      hours = float(input("Enter the number of hours studied (e.g., 3.5): "))
+      if hours < 0:
+        print("Please enter a non-negative number of hours.")
+        continue
+      break
+    except ValueError:
+      print("Invalid input. Please enter a numerical value.")
+
+  # Create a DataFrame for the new data point
+  new_data = pd.DataFrame({'Hours Studied': [hours]})
+
+  # Predict the probability of passing
+  predicted_probability = model.predict_proba(new_data)[0][1]
+
+  # Convert the probability to a percentage and round to two decimal places
+  predicted_chance = round(predicted_probability * 100, 2)
+
+  # Print the predicted chance of passing
+  print(f"The predicted chance of passing after studying for {hours} hours is {predicted_chance}%.")
+
+# Call the function to get user input and make prediction
+predict_pass_chance()
